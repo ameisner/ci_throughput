@@ -11,7 +11,7 @@ pro assemble_ci_transmission, airmass=airmass, outstr=outstr
   atm_str = mrdfits('../etc/ZenithExtinction-KPNO.fits', 1)
 
 ; will be creating transmission curve on 1 nm spaced grid
-; so want to smooth atmospheric extension to be critically sampled on
+; so want to smooth atmospheric extinction to be critically sampled on
 ; that grid
 
 ; ZenithExtinction-KPNO.fits is uniformly gridded in wavelength, with
