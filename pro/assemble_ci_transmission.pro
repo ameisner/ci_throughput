@@ -8,11 +8,20 @@ pro assemble_ci_transmission, airmass=airmass, outstr=outstr
 
   if ~keyword_set(airmass) then airmass = 1.0
 
-  readcol, '../etc/kpnoextinct.dat', $
-      lambda_atm_angstrom, mag_per_airmass, F='F, F'
+  atm_str = mrdfits('../etc/ZenithExtinction-KPNO.fits', 1)
 
-  lambda_atm_nm = lambda_atm_angstrom/10.0
-  atm_transmission_frac = 10^(-1.0*airmass*mag_per_airmass/2.5)
+; will be creating transmission curve on 1 nm spaced grid
+; so want to smooth atmospheric extension to be critically sampled on
+; that grid
+
+; ZenithExtinction-KPNO.fits is uniformly gridded in wavelength, with
+; spacing of 0.1 angstrom
+
+; sigma = 10 angstroms
+  atm_extinction_smooth = gauss_smooth(atm_str.extinction, 100.0)
+
+  lambda_atm_nm = atm_str.wavelength/10.0
+  atm_transmission_frac = 10^(-1.0*airmass*atm_extinction_smooth/2.5)
 
   readcol, '../etc/primary_reflectance.dat', lambda_mirror_nm, $
       primary_reflectance_frac
@@ -55,7 +64,7 @@ pro assemble_ci_transmission, airmass=airmass, outstr=outstr
 
   total_transmission = atm_transmission_common*primary_reflectance_common*corrector_transmission_common*filter_transmission_common*qe_common
 
-  plot, lambda_common_nm, total_transmission, psym=1
+  plot, lambda_common_nm, total_transmission, psym=3
 ; create output structure
 
   outstr = replicate({lambda_nm: 0.0, nu_hz: 0.0, transmission: 0.0}, $
