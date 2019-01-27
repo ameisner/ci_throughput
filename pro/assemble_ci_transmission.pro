@@ -24,17 +24,17 @@ pro assemble_ci_transmission, airmass=airmass, outstr=outstr
   atm_transmission_frac = 10^(-1.0*airmass*atm_extinction_smooth/2.5)
 
   readcol, '../etc/primary_reflectance.dat', lambda_mirror_nm, $
-      primary_reflectance_frac
+      primary_reflectance_frac, F='F, F'
 
   readcol, '../etc/desi_corrector_throughput.dat', lambda_corrector_nm, $
-      corrector_transmission_frac
+      corrector_transmission_frac, F='F, F'
 
   readcol, '../etc/astrodon_photometrics_gen2_sloan.csv', lambda_filter_nm, $
-      filter_transmission_percent
+      filter_transmission_percent, F='F, F'
 
   filter_transmission_frac = filter_transmission_percent/100.0
 
-  readcol, '../etc/ci_ccd_qe_fig5.csv', lambda_qe_nm, qe_frac
+  readcol, '../etc/ci_ccd_qe_fig5.csv', lambda_qe_nm, qe_frac, F='F, F'
 
   plot, lambda_mirror_nm, primary_reflectance_frac
   oplot, lambda_atm_nm, atm_transmission_frac
