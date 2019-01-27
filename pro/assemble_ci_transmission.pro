@@ -36,11 +36,32 @@ pro assemble_ci_transmission, airmass=airmass, outstr=outstr
 
   readcol, '../etc/ci_ccd_qe_fig5.csv', lambda_qe_nm, qe_frac, F='F, F'
 
-  plot, lambda_mirror_nm, primary_reflectance_frac
-  oplot, lambda_atm_nm, atm_transmission_frac
-  oplot, lambda_corrector_nm, corrector_transmission_frac
-  oplot, lambda_filter_nm, filter_transmission_frac
-  oplot, lambda_qe_nm, qe_frac
+  window, xsize=950, ysize=650
+  xtitle = 'wavelength (nm)'
+  ytitle = 'transmission'
+  plot, lambda_mirror_nm, primary_reflectance_frac, xrange=[350, 1055], /xst, $
+      charsize=1.4, xtitle=xtitle, ytitle=ytitle
+  oplot, lambda_atm_nm, atm_transmission_frac, color=djs_icolor('blue')
+  oplot, lambda_corrector_nm, corrector_transmission_frac, $
+      color=djs_icolor('green')
+  oplot, lambda_filter_nm, filter_transmission_frac, color=djs_icolor('red')
+  oplot, lambda_qe_nm, qe_frac, color=djs_icolor('yellow')
+
+  xyouts, 775, 0.6, 'atmosphere', charsize=2, color=djs_icolor('blue')
+  xyouts, 775, 0.55, 'airmass = ' + string(airmass, format='(F4.2)'), $
+      charsize=2, color=djs_icolor('blue')
+
+  xyouts, 875, 0.3, 'KAF-6303 QE', charsize=2, color=djs_icolor('yellow')
+
+  xyouts, 412.5, 0.15, "astrodon r' filter", charsize=2, color=djs_icolor('red')
+
+  xyouts, 370, 0.91, charsize=1.5, 'primary mirror (reflectance)'
+
+  xyouts, 364, 0.8575, 'DESI corrector', color=djs_icolor('green'), $
+      charsize=1.4
+
+  bitmap = tvrd(true=1)
+  write_png, 'ci_transmission_factors.png', bitmap
 
 ; all of these multiplicative throughput factors on a common
 ; wavelength grid are fraction 0->1
