@@ -1,0 +1,25 @@
+# based on DESI-347-v14 Throughput Noise SNR Calcs
+# at each wavelength, multiplies together the following four factors:
+#     Echo 22 glass/silica throughput
+#     Throughput After Scattering Loss (HSF/Roughness)
+#     One minus Corrector Vignetting
+#     total corrector coating throughput
+# these values do not account for primary mirror reflectance, which I'm handling separately
+
+lambda_nm, frac
+350, 0.4894920585
+360, 0.6594625831
+375, 0.7714193164
+400, 0.8322356037
+450, 0.8441359718
+500, 0.8624269180
+550, 0.8674448457
+600, 0.8726323855
+650, 0.8689848490
+700, 0.8816722577
+750, 0.8719982604
+800, 0.8603778758
+850, 0.8594154844
+900, 0.8679048264
+980, 0.8736161493
+995, 0.8696742552
