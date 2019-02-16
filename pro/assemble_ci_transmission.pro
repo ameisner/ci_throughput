@@ -38,7 +38,7 @@ pro assemble_ci_transmission, airmass=airmass, outstr=outstr
 
   window, xsize=950, ysize=650
   xtitle = 'wavelength (nm)'
-  ytitle = 'transmission'
+  ytitle = 'throughput'
   plot, lambda_mirror_nm, primary_reflectance_frac, xrange=[350, 1055], /xst, $
       charsize=1.4, xtitle=xtitle, ytitle=ytitle
   oplot, lambda_atm_nm, atm_transmission_frac, color=djs_icolor('blue')
@@ -61,7 +61,7 @@ pro assemble_ci_transmission, airmass=airmass, outstr=outstr
       charsize=1.4
 
   bitmap = tvrd(true=1)
-  write_png, 'ci_transmission_factors.png', bitmap
+  write_png, 'ci_throughput_factors.png', bitmap
 
 ; all of these multiplicative throughput factors on a common
 ; wavelength grid are fraction 0->1
