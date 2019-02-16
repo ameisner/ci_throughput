@@ -1,4 +1,4 @@
-pro plot_ci_transmission
+pro plot_ci_throughput
 
   assemble_ci_transmission, outstr=outstr, airmass=1.0
 
