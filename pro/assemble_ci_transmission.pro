@@ -1,4 +1,4 @@
-pro assemble_ci_transmission, airmass=airmass, outstr=outstr
+pro assemble_ci_transmission, airmass=airmass, outstr=outstr, write=write
 
 ; common grid onto which to interpolate various inputs
 ; only need to consider 550 nm to 700 nm based on astrodon r' filter curve
@@ -99,5 +99,17 @@ pro assemble_ci_transmission, airmass=airmass, outstr=outstr
   nu_hz = c_air/(lambda_common_nm*(1e-9))
 
   outstr.nu_hz = nu_hz
+
+  if keyword_set(write) then begin
+      outname = '../etc/ci_throughput-airmass_' + $
+          string(airmass, format='(F4.2)') + '.fits'
+      print, outname
+      if file_test(outname) then stop
+      _outstr = struct_trimtags(outstr, select=['LAMBDA_NM'])
+      addstr = replicate({throughput: 0.0d}, n_elements(_outstr))
+      addstr.throughput = outstr.transmission
+      _outstr = struct_addtags(_outstr, addstr)
+      mwrfits, _outstr, outname
+  endif
 
 end
