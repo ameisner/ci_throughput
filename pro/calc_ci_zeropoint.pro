@@ -21,7 +21,7 @@ pro calc_ci_zeropoint, airmass=airmass
   plot, outstr.lambda_nm, detected_photons_per_second_per_hertz_per_cm2, $
       charsize=2
 
-  area_sq_meters = 8.678709421 ; desi.yaml
+  area_sq_meters = 8.658739421 ; desi.yaml
   area_sq_cm = area_sq_meters*100.0*100.0
 
   detected_photons_per_second_per_hertz = $
