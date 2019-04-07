@@ -36,11 +36,15 @@ function get_shifted_astrom, h
   return, shifted_astrom(sxpar(h, 'SKYRA'), sxpar(h, 'SKYDEC'))
 end
 
-pro get_cic_image_and_header, im, h
+pro get_cic_image_and_header, im, h, raw=raw
 
+  if ~keyword_set(raw) then $
   fname = $
-      '/global/cscratch1/sd/ameisner/real_data3/ci-00004486_reduced.fits.gz'
-
+      '/global/cscratch1/sd/ameisner/real_data3/ci-00004486_reduced.fits.gz' $
+  else $
+  fname = '/project/projectdirs/desi/spectro/data/20190406/00004486/ci-00004486.fits.fz'
+ 
+  print, 'READING : ' + fname + ' @@@@@@@@@@@@@@@@'
   im = readfits(fname, h, ex=2)
 
   mask = readfits('/project/projectdirs/desi/users/ameisner/CI/ci_reduce_etc/CI_static_badpixels.fits', ex=1, hmask)
@@ -55,9 +59,9 @@ pro get_cic_image_and_header, im, h
 
 end
 
-pro get_ps1_sample, cat
+pro get_ps1_sample, cat, raw=raw
 
-  get_cic_image_and_header, im, h
+  get_cic_image_and_header, im, h, raw=raw
   astr = get_shifted_astrom(h)
 
   cat = read_ps1cat(astr.crval[0], astr.crval[1])
@@ -111,16 +115,16 @@ pro try_recentroid, x, y, im
 
 end
 
-pro try_aper_phot, cat, im=im
+pro try_aper_phot, cat, im=im, raw=raw
 
 ; cat arg is meant to be OUTPUT
 ; im also meant as optional output
 
 ; assumes x, y input are already refined with try_recentroid !!
 
-  get_cic_image_and_header, im, h
+  get_cic_image_and_header, im, h, raw=raw
 
-  get_ps1_sample, cat
+  get_ps1_sample, cat, raw=raw
 
   x = cat.x
   y = cat.y 
@@ -235,13 +239,13 @@ function get_aperture_corr, psf
   return, rat[0]
 end
 
-pro get_zp_e_per_s
+pro get_zp_e_per_s, raw=raw
 
   exptime = 15.0
   gain = 1.64
 
  ; get cat and im
-  try_aper_phot, cat, im=im
+  try_aper_phot, cat, im=im, raw=raw
 
   cube =  get_cutouts(im, cat, sidelen=101)
 
@@ -256,10 +260,24 @@ help, aper_corr
 
   inst_mag = -2.5*alog10(rate_tot_e_per_s)
 
-  plot, cat.rmag, inst_mag, psym=1
+;  plot, cat.rmag, inst_mag, psym=1
 
 
-  print, 'zero point is', median(cat.rmag - inst_mag)
+  zp = median(cat.rmag - inst_mag)
+  print, 'zero point is', zp
+
+  plot, cat.rmag, inst_mag, psym=1, charsize=2.5, xtitle='r' + $
+      textoidl('!Dps1!N'), $
+      ytitle='-2.5'+ textoidl('\times') + 'log' + textoidl('!D10!N') + $
+       '(e-/s)', title='EXPID = 4486, EXTNAME = CIC'
+
+  oplot, [0, 100], [0, 100]-zp, color=djs_icolor('red')
+
+  xyouts, 14.3, -10.0, 'y = x - ' + strtrim(string(zp, format='(F10.3)') ,2 ), $
+      color=djs_icolor('red'), charsize=3
+
+  bitmap = tvrd(true=1)
+  write_png, 'zpt_summary_4486_CIC.png', bitmap
 stop
 ; remember to compare to value that incorporates correct airmass !!
 ; also there's the aperture mask issue, which should cause real
