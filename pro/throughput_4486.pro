@@ -241,7 +241,9 @@ end
 
 pro get_zp_e_per_s, raw=raw
 
-  exptime = 15.0
+  get_cic_image_and_header, _, h, raw=raw
+
+  exptime = sxpar(h, 'EXPTIME')
   gain = 1.64
 
  ; get cat and im
