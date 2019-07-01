@@ -30,7 +30,15 @@ pro get_ps1_sample, cat, raw=raw
 
   get_cic_image_and_header, im, h, raw=raw, astr=astr
 
-  cat = read_ps1cat(astr.crval[0], astr.crval[1])
+; use corner coordinates + center coordinates to get PS1 catalog
+
+;           LL    UL       UR       LR       center
+  x_vals = [0.0d, 0.0d   , 3071.0d, 3071.0d, 1535.5d]
+  y_vals = [0.0d, 2047.0d, 2047.0d, 0.0d   , 1023.5d]
+
+  xy2ad, x_vals, y_vals, astr, ra_vals, dec_vals
+
+  cat = read_ps1cat(ra_vals, dec_vals)
 
   rmag = reform(cat.median[1,*], n_elements(cat))
 
@@ -207,7 +215,7 @@ end
 
 pro get_zp_e_per_s, raw=raw
 
-  get_cic_image_and_header, _, h, raw=raw
+  get_cic_image_and_header, _, h, raw=raw, astr=astr
 
   exptime = sxpar(h, 'EXPTIME')
   gain = 1.64
