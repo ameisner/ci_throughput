@@ -17,15 +17,20 @@ pro get_cic_image_and_header, im, h, raw=raw, astr=astr
 
   if n_elements(expid) NE 1 then stop
 
+  expid_string = string(expid, format='(I08)')
+
   night = night_from_expid(expid)
 
   if ~keyword_set(raw) then $
-  fname = $
- '/project/projectdirs/desi/users/ameisner/CI/reduced/v0001/' + night + '/ci-00004486/ci-00004486_reduced.fits' $
+  fname = '/project/projectdirs/desi/users/ameisner/CI/reduced/v0001/' + $
+      night + '/ci-' + expid_string + '/ci-' + expid_string + '_reduced.fits' $
   else $
-  fname = '/project/projectdirs/desi/spectro/data/' + night + '/00004486/ci-00004486.fits.fz'
+      fname = '/project/projectdirs/desi/spectro/data/' + night + $
+      '/' + expid_string + '/ci-' + expid_string + '.fits.fz'
  
-  fname_astr = '/project/projectdirs/desi/users/ameisner/CI/reduced/v0001/' + night + '/ci-00004486/ci-00004486_astr-a.fits'
+  fname_astr = $
+  '/project/projectdirs/desi/users/ameisner/CI/reduced/v0001/' + night + $
+  '/ci-' + expid_string + '/ci-' + expid_string + '_astr-a.fits'
 
   astr = mrdfits(fname_astr, 1)
   astr = astr[where(strtrim(astr.extname, 2) EQ 'CIC')]
