@@ -67,14 +67,6 @@ pro get_ps1_sample, cat, raw=raw
 
 end
 
-;pro optimize_astrom, astr_guess
-
-;  get_ps1_sample, cat
-
-  
-
-;end
-
 pro try_recentroid, x, y, im
 
   for i=0L, n_elements(x)-1 do begin
