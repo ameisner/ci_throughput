@@ -11,7 +11,7 @@ function night_from_expid, expid
 
 end
 
-pro get_cic_image_and_header, im, h, raw=raw, astr=astr
+pro get_cic_image_and_header, im, h, raw=raw, astr=astr, h_raw=h_raw
 
   expid = 4486
 
@@ -25,6 +25,9 @@ pro get_cic_image_and_header, im, h, raw=raw, astr=astr
       '/' + expid_string + '/ci-' + expid_string + '.fits.fz'
 
   if ~file_test(fname_raw) then stop
+
+; need this to get the airmass
+  h_raw = headfits(fname_raw, ex=1, /silent)
 
   if ~keyword_set(raw) then $
   fname = '/project/projectdirs/desi/users/ameisner/CI/reduced/v0001/' + $
@@ -235,7 +238,7 @@ end
 
 pro get_zp_e_per_s, raw=raw
 
-  get_cic_image_and_header, _, h, raw=raw, astr=astr
+  get_cic_image_and_header, _, h, raw=raw, astr=astr, h_raw=h_raw
 
   exptime = sxpar(h, 'EXPTIME')
   gain = 1.64
