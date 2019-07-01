@@ -1,12 +1,31 @@
+function night_from_expid, expid
+
+  if n_elements(expid) NE 1 then stop
+
+  if (expid NE 4486) AND (expid NE 7577) AND (expid NE 7578) AND $
+     (expid NE 7579) AND (expid NE 7580) AND (expid NE 7581) then stop
+
+  if expid EQ 4486 then return, '20190406'
+
+  return, '20190417'
+
+end
+
 pro get_cic_image_and_header, im, h, raw=raw, astr=astr
+
+  expid = 4486
+
+  if n_elements(expid) NE 1 then stop
+
+  night = night_from_expid(expid)
 
   if ~keyword_set(raw) then $
   fname = $
- '/project/projectdirs/desi/users/ameisner/CI/reduced/v0001/20190406/ci-00004486/ci-00004486_reduced.fits' $
+ '/project/projectdirs/desi/users/ameisner/CI/reduced/v0001/' + night + '/ci-00004486/ci-00004486_reduced.fits' $
   else $
-  fname = '/project/projectdirs/desi/spectro/data/20190406/00004486/ci-00004486.fits.fz'
+  fname = '/project/projectdirs/desi/spectro/data/' + night + '/00004486/ci-00004486.fits.fz'
  
-  fname_astr = '/project/projectdirs/desi/users/ameisner/CI/reduced/v0001/20190406/ci-00004486/ci-00004486_astr-a.fits'
+  fname_astr = '/project/projectdirs/desi/users/ameisner/CI/reduced/v0001/' + night + '/ci-00004486/ci-00004486_astr-a.fits'
 
   astr = mrdfits(fname_astr, 1)
   astr = astr[where(strtrim(astr.extname, 2) EQ 'CIC')]
