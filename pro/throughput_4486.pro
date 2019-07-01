@@ -278,6 +278,9 @@ help, aper_corr
   xyouts, 14.3, -10.0, 'y = x - ' + strtrim(string(zp, format='(F10.3)') ,2 ), $
       color=djs_icolor('red'), charsize=3
 
+  xyouts, 15.0, -12.0, 'assumed gain = ' + string(gain, format='(F5.3)') + $
+      ' e-/ADU', charsize=2, color=djs_icolor('green')
+
   bitmap = tvrd(true=1)
   write_png, 'zpt_summary_4486_CIC.png', bitmap
 stop
