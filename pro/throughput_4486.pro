@@ -2,7 +2,7 @@ pro get_cic_image_and_header, im, h, raw=raw, astr=astr
 
   if ~keyword_set(raw) then $
   fname = $
-      '/global/cscratch1/sd/ameisner/real_data3/ci-00004486_reduced.fits.gz' $
+ '/project/projectdirs/desi/users/ameisner/CI/reduced/v0001/20190406/ci-00004486/ci-00004486_reduced.fits' $
   else $
   fname = '/project/projectdirs/desi/spectro/data/20190406/00004486/ci-00004486.fits.fz'
  
