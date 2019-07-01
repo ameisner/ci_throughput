@@ -21,12 +21,16 @@ pro get_cic_image_and_header, im, h, raw=raw, astr=astr
 
   night = night_from_expid(expid)
 
+  fname_raw = '/project/projectdirs/desi/spectro/data/' + night + $
+      '/' + expid_string + '/ci-' + expid_string + '.fits.fz'
+
+  if ~file_test(fname_raw) then stop
+
   if ~keyword_set(raw) then $
   fname = '/project/projectdirs/desi/users/ameisner/CI/reduced/v0001/' + $
       night + '/ci-' + expid_string + '/ci-' + expid_string + '_reduced.fits' $
   else $
-      fname = '/project/projectdirs/desi/spectro/data/' + night + $
-      '/' + expid_string + '/ci-' + expid_string + '.fits.fz'
+      fname = fname_raw
  
   fname_astr = $
   '/project/projectdirs/desi/users/ameisner/CI/reduced/v0001/' + night + $
