@@ -36,7 +36,7 @@ function get_shifted_astrom, h
   return, shifted_astrom(sxpar(h, 'SKYRA'), sxpar(h, 'SKYDEC'))
 end
 
-pro get_cic_image_and_header, im, h, raw=raw
+pro get_cic_image_and_header, im, h, raw=raw, astr=astr
 
   if ~keyword_set(raw) then $
   fname = $
@@ -44,6 +44,11 @@ pro get_cic_image_and_header, im, h, raw=raw
   else $
   fname = '/project/projectdirs/desi/spectro/data/20190406/00004486/ci-00004486.fits.fz'
  
+  fname_astr = '/project/projectdirs/desi/users/ameisner/CI/reduced/v0001/20190406/ci-00004486/ci-00004486_astr-a.fits'
+
+  astr = mrdfits(fname_astr, 1)
+  astr = astr[where(strtrim(astr.extname, 2) EQ 'CIC')]
+
   print, 'READING : ' + fname + ' @@@@@@@@@@@@@@@@'
   im = readfits(fname, h, ex=2)
 
@@ -61,8 +66,7 @@ end
 
 pro get_ps1_sample, cat, raw=raw
 
-  get_cic_image_and_header, im, h, raw=raw
-  astr = get_shifted_astrom(h)
+  get_cic_image_and_header, im, h, raw=raw, astr=astr
 
   cat = read_ps1cat(astr.crval[0], astr.crval[1])
 
