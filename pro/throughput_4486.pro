@@ -297,10 +297,3 @@ end
 ; ww = where((gaia.phot_g_mean_mag GT 14.5) AND (gaia.phot_g_mean_mag LT 17.0))
 
 ; airmass = 1.5908490000000000
-
-pro calc_pred_zp
-
-  h = headfits('/project/projectdirs/desi/spectro/data/20190406/00004486/ci-00004486.fits.fz',ex=1)
-
-  calc_ci_zeropoint, airmass=sxpar(h, 'AIRMASS')
-end
