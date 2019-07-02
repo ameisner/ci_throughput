@@ -264,7 +264,7 @@ pro append_bitmask_info, cat, bitmask
 
 end
 
-pro get_zp_e_per_s, raw=raw, expid=expid
+pro get_zp_e_per_s, raw=raw, expid=expid, outstr=outstr
 
   if ~keyword_set(expid) then expid = 4486
 
@@ -320,7 +320,17 @@ help, aper_corr
 
   bitmap = tvrd(true=1)
   write_png, 'zpt_summary_' + strtrim(string(expid), 2) + '_CIC.png', bitmap
-stop
+
+  outstr = {night: '', expid: 0L, exptime: 0.0, airmass: 0.0, $
+            zp_meas: 0.0, zp_pred: 0.0}
+
+  outstr.night = night_from_expid(expid)
+  outstr.expid = expid
+  outstr.exptime = exptime
+  outstr.airmass = sxpar(h_raw, 'AIRMASS')
+  outstr.zp_meas = zp
+  outstr.zp_pred = zp_pred
+
 ; remember to compare to value that incorporates correct airmass !!
 ; also there's the aperture mask issue, which should cause real
 ; measurement to be deeper than forecasted by a little bit
