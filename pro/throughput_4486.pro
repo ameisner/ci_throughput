@@ -322,7 +322,7 @@ help, aper_corr
   write_png, 'zpt_summary_' + strtrim(string(expid), 2) + '_CIC.png', bitmap
 
   outstr = {night: '', expid: 0L, exptime: 0.0, airmass: 0.0, $
-            zp_meas: 0.0, zp_pred: 0.0}
+            zp_meas: 0.0, zp_pred: 0.0, raw: 0B}
 
   outstr.night = night_from_expid(expid)
   outstr.expid = expid
@@ -330,6 +330,7 @@ help, aper_corr
   outstr.airmass = sxpar(h_raw, 'AIRMASS')
   outstr.zp_meas = zp
   outstr.zp_pred = zp_pred
+  outstr.raw = keyword_set(raw)
 
 ; remember to compare to value that incorporates correct airmass !!
 ; also there's the aperture mask issue, which should cause real
@@ -343,3 +344,25 @@ end
 ; ww = where((gaia.phot_g_mean_mag GT 14.5) AND (gaia.phot_g_mean_mag LT 17.0))
 
 ; airmass = 1.5908490000000000
+
+pro _gather_results, outstr
+
+  expids = [4486, 4487, 4488, 7577, 7578, 7579, 7580, 7581]
+
+  for i=0L, n_elements(expids)-1 do begin
+      get_zp_e_per_s, expid=expids[i], outstr=result
+      if ~keyword_set(outstr) then outstr = result else $
+          outstr = struct_append(outstr, result)
+  endfor
+
+end
+
+; mwrfits, outstr, 'two_night_summary.fits'
+
+pro _results_to_tex
+
+  str = mrdfits('two_night_summary.fits', 1)
+
+  
+
+end
