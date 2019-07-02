@@ -278,6 +278,22 @@ function get_central_radec, astr
   return, outstr
 end
 
+function zp_standard_error, diff
+
+  sind = sort(diff)
+
+  val_u = diff[sind[long(round(0.84*n_elements(diff)))]]
+  val_l = diff[sind[long(round(0.16*n_elements(diff)))]]
+
+  sigma = (val_u - val_l)/2.0
+
+  std_err = sigma/sqrt(n_elements(diff)) ; should i use n-1 here ? 
+
+  outstr = {zp_sigma_mag: sigma, zp_std_err_mag: std_err}
+
+  return, outstr
+end
+
 pro get_zp_e_per_s, raw=raw, expid=expid, outstr=outstr, gain=gain
 
   if ~keyword_set(expid) then expid = 4486
@@ -313,6 +329,8 @@ help, aper_corr
 
   zp = median(cat.rmag - inst_mag)
   print, 'zero point is', zp
+
+  unc_info = zp_standard_error(cat.rmag - inst_mag)
 
   calc_ci_zeropoint, airmass=sxpar(h_raw, 'AIRMASS'), zp_pred=zp_pred, /silent
   print, 'PREDICTED zero point is', zp_pred
@@ -350,6 +368,8 @@ help, aper_corr
   addstr = get_central_radec(astr)
 
   outstr = struct_addtags(outstr, addstr)
+
+  outstr = struct_addtags(outstr, unc_info)
 
 ; remember to compare to value that incorporates correct airmass !!
 ; also there's the aperture mask issue, which should cause real
