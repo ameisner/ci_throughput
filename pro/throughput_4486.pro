@@ -239,6 +239,10 @@ end
 
 pro get_zp_e_per_s, raw=raw
 
+  expid = 4486
+
+  if n_elements(expid) NE 1 then stop
+
   get_cic_image_and_header, _, h, raw=raw, astr=astr, h_raw=h_raw
 
   exptime = sxpar(h, 'EXPTIME')
@@ -273,7 +277,8 @@ help, aper_corr
   plot, cat.rmag, inst_mag, psym=1, charsize=2.5, xtitle='r' + $
       textoidl('!Dps1!N'), $
       ytitle='-2.5'+ textoidl('\times') + 'log' + textoidl('!D10!N') + $
-       '(e-/s)', title='EXPID = 4486, EXTNAME = CIC'
+       '(e-/s)', title='EXPID = ' + strtrim(string(expid), 2) + $
+       ', EXTNAME = CIC'
 
   oplot, [0, 100], [0, 100]-zp, color=djs_icolor('red')
 
@@ -284,7 +289,7 @@ help, aper_corr
       ' e-/ADU', charsize=2, color=djs_icolor('green')
 
   bitmap = tvrd(true=1)
-  write_png, 'zpt_summary_4486_CIC.png', bitmap
+  write_png, 'zpt_summary_' + strtrim(string(expid), 2) + '_CIC.png', bitmap
 stop
 ; remember to compare to value that incorporates correct airmass !!
 ; also there's the aperture mask issue, which should cause real
