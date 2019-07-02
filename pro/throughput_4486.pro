@@ -322,7 +322,7 @@ help, aper_corr
   write_png, 'zpt_summary_' + strtrim(string(expid), 2) + '_CIC.png', bitmap
 
   outstr = {night: '', expid: 0L, exptime: 0.0, airmass: 0.0, $
-            zp_meas: 0.0, zp_pred: 0.0, raw: 0B}
+            zp_meas: 0.0, zp_pred: 0.0, raw: 0B, gain: gain}
 
   outstr.night = night_from_expid(expid)
   outstr.expid = expid
@@ -357,7 +357,7 @@ pro _gather_results, outstr
 
 end
 
-; mwrfits, outstr, 'two_night_summary.fits'
+; mwrfits, outstr, 'two_night_summary-1.64.fits'
 
 pro _results_to_tex
 
