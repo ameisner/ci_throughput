@@ -44,7 +44,10 @@ pro get_cic_image_and_header, im, h, raw=raw, astr=astr, h_raw=h_raw, $
   astr = astr[where(strtrim(astr.extname, 2) EQ 'CIC')]
 
   print, 'READING : ' + fname + ' @@@@@@@@@@@@@@@@'
-  im = readfits(fname, h, ex=2)
+
+  if ~keyword_set(raw) then ex = 2 else ex = get_raw_extnum('CIC', fname, $
+      /image)
+  im = readfits(fname, h, ex=ex)
 
   mask = readfits('/project/projectdirs/desi/users/ameisner/CI/ci_reduce_etc/CI_static_badpixels.fits', ex=1, hmask)
 
