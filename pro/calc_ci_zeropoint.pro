@@ -1,4 +1,4 @@
-pro calc_ci_zeropoint, airmass=airmass
+pro calc_ci_zeropoint, airmass=airmass, zp_pred=zp_pred, silent=silent
 
   assemble_ci_transmission, airmass=airmass, outstr=outstr
 
@@ -35,10 +35,14 @@ pro calc_ci_zeropoint, airmass=airmass
   detected_photons_per_second = $
       total(d_nu_hz*detected_photons_per_second_per_hertz)
 
+  if ~keyword_set(silent) then $
   print, 'detected photons per second from flat-spectrum (in f_nu) 0 mag AB', $
       detected_photons_per_second
 
+  zp_pred = 2.5*alog10(detected_photons_per_second)
+
+  if ~keyword_set(silent) then $
   print, 'implied zeropoint (AB mag of 1 electron/second source)', $
-      2.5*alog10(detected_photons_per_second)
+      zp_pred
 
 end
