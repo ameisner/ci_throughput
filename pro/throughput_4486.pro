@@ -58,9 +58,9 @@ pro get_cic_image_and_header, im, h, raw=raw, astr=astr, h_raw=h_raw, $
 
 end
 
-pro get_ps1_sample, cat, raw=raw
+pro get_ps1_sample, cat, raw=raw, expid=expid
 
-  get_cic_image_and_header, im, h, raw=raw, astr=astr
+  get_cic_image_and_header, im, h, raw=raw, astr=astr, expid=expid
 
 ; use corner coordinates + center coordinates to get PS1 catalog
 
@@ -113,16 +113,16 @@ pro try_recentroid, x, y, im
 
 end
 
-pro try_aper_phot, cat, im=im, raw=raw
+pro try_aper_phot, cat, im=im, raw=raw, expid=expid
 
 ; cat arg is meant to be OUTPUT
 ; im also meant as optional output
 
 ; assumes x, y input are already refined with try_recentroid !!
 
-  get_cic_image_and_header, im, h, raw=raw
+  get_cic_image_and_header, im, h, raw=raw, expid=expid
 
-  get_ps1_sample, cat, raw=raw
+  get_ps1_sample, cat, raw=raw, expid=expid
 
   x = cat.x
   y = cat.y 
@@ -237,19 +237,19 @@ function get_aperture_corr, psf
   return, rat[0]
 end
 
-pro get_zp_e_per_s, raw=raw
+pro get_zp_e_per_s, raw=raw, expid=expid
 
-  expid = 4486
+  if ~keyword_set(expid) then expid = 4486
 
   if n_elements(expid) NE 1 then stop
 
-  get_cic_image_and_header, _, h, raw=raw, astr=astr, h_raw=h_raw
+  get_cic_image_and_header, _, h, raw=raw, astr=astr, h_raw=h_raw, expid=expid
 
   exptime = sxpar(h, 'EXPTIME')
   gain = 1.64
 
  ; get cat and im
-  try_aper_phot, cat, im=im, raw=raw
+  try_aper_phot, cat, im=im, raw=raw, expid=expid
 
   cube =  get_cutouts(im, cat, sidelen=101)
 
