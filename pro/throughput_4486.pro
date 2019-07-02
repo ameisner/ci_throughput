@@ -397,11 +397,28 @@ pro _gather_results, outstr, gain=gain
 end
 
 ; mwrfits, outstr, 'two_night_summary-1.64.fits'
+; mwrfits, outstr, 'two_night_summary-1.71.fits'
 
 pro _results_to_tex
 
-  str = mrdfits('two_night_summary.fits', 1)
+; use the CIC gain = 1.71 version since that's what i actually
+; think the CIC gain is based on my own measurements
 
-  
+  str = mrdfits('two_night_summary-1.71.fits', 1)
+help,str,/st
+
+  for i=0L, n_elements(str)-1 do begin
+      print, str[i].night, ' & ', str[i].expid, ' & ', $
+          long(str[i].exptime), ' & ', $
+          string(str[i].airmass, format='(F5.3)'), ' & ', $
+          string(str[i].zp_meas, format='(F6.3)') + ' $\pm$ ' + $
+          string(str[i].zp_std_err_mag, format='(F5.3)'), ' & ' , $
+          string(str[i].zp_pred, format='(F7.4)'), ' & ', $
+          string(str[i].gain, format='(F5.3)'), ' & ', $
+          str[i].n_stars, ' & ', $
+          string(str[i].racen, format='(F8.4)'), ' & ', $
+          string(str[i].deccen, format='(F8.4)'), ' \\'
+          
+  endfor  
 
 end
