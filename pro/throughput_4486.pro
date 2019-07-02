@@ -265,6 +265,10 @@ help, aper_corr
   zp = median(cat.rmag - inst_mag)
   print, 'zero point is', zp
 
+  calc_ci_zeropoint, airmass=sxpar(h_raw, 'AIRMASS'), zp_pred=zp_pred, /silent
+  print, 'PREDICTED zero point is', zp_pred
+
+  !p.multi = [0, 1, 1]
   plot, cat.rmag, inst_mag, psym=1, charsize=2.5, xtitle='r' + $
       textoidl('!Dps1!N'), $
       ytitle='-2.5'+ textoidl('\times') + 'log' + textoidl('!D10!N') + $
