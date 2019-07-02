@@ -12,7 +12,7 @@ function night_from_expid, expid
 end
 
 pro get_cic_image_and_header, im, h, raw=raw, astr=astr, h_raw=h_raw, $
-                              expid=expid
+                              expid=expid, bitmask=bitmask
 
   if ~keyword_set(expid) then expid = 4486
 
@@ -48,6 +48,7 @@ pro get_cic_image_and_header, im, h, raw=raw, astr=astr, h_raw=h_raw, $
   if ~keyword_set(raw) then ex = 2 else ex = get_raw_extnum('CIC', fname, $
       /image)
   im = readfits(fname, h, ex=ex)
+  if keyword_set(raw) then im = float(im)
 
   mask = readfits('/project/projectdirs/desi/users/ameisner/CI/ci_reduce_etc/CI_static_badpixels.fits', ex=1, hmask)
 
@@ -58,6 +59,10 @@ pro get_cic_image_and_header, im, h, raw=raw, astr=astr, h_raw=h_raw, $
   inty = djs_maskinterp(im, mask NE 0, iaxis=1)
 
   im = (intx + inty)/2
+
+  bitmask = $
+    readfits('/project/projectdirs/desi/users/ameisner/CI/reduced/v0001/' + $
+    night + '/ci-' + expid_string + '/ci-' + expid_string + '_bitmask.fits.gz')
 
 end
 
@@ -240,19 +245,39 @@ function get_aperture_corr, psf
   return, rat[0]
 end
 
+pro append_bitmask_info, cat, bitmask
+
+; cat gets modified via the addition of another bitmask column that's
+; just nearest neighbor interpolated off of the bitmask image
+
+  ix = ((long(round(cat.x)) > 0) < 3172)
+  iy = ((long(round(cat.y)) > 0) < 2047)
+
+  bitmask_vals = bitmask[ix, iy]
+
+  addstr = replicate({ci_bitmask: 0L}, n_elements(cat))
+  addstr.ci_bitmask = bitmask_vals
+
+  cat = struct_addtags(cat, addstr)
+
+end
+
 pro get_zp_e_per_s, raw=raw, expid=expid
 
   if ~keyword_set(expid) then expid = 4486
 
   if n_elements(expid) NE 1 then stop
 
-  get_cic_image_and_header, _, h, raw=raw, astr=astr, h_raw=h_raw, expid=expid
+  get_cic_image_and_header, _, h, raw=raw, astr=astr, h_raw=h_raw, $
+      expid=expid, bitmask=bitmask
 
   exptime = sxpar(h, 'EXPTIME')
   gain = 1.64
 
  ; get cat and im
   try_aper_phot, cat, im=im, raw=raw, expid=expid
+
+  append_bitmask_info, cat, bitmask
 
   cube =  get_cutouts(im, cat, sidelen=101)
 
