@@ -11,9 +11,10 @@ function night_from_expid, expid
 
 end
 
-pro get_cic_image_and_header, im, h, raw=raw, astr=astr, h_raw=h_raw
+pro get_cic_image_and_header, im, h, raw=raw, astr=astr, h_raw=h_raw, $
+                              expid=expid
 
-  expid = 4486
+  if ~keyword_set(expid) then expid = 4486
 
   if n_elements(expid) NE 1 then stop
 
