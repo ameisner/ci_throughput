@@ -264,7 +264,21 @@ pro append_bitmask_info, cat, bitmask
 
 end
 
-pro get_zp_e_per_s, raw=raw, expid=expid, outstr=outstr
+function get_central_radec, astr
+
+; think astr should be the recalibrated WCS
+
+  xcen = 1535.5d
+  ycen = 1023.5d
+
+  xy2ad, xcen, ycen, astr, racen, deccen
+
+  outstr = {racen: racen, deccen: deccen}
+
+  return, outstr
+end
+
+pro get_zp_e_per_s, raw=raw, expid=expid, outstr=outstr, gain=gain
 
   if ~keyword_set(expid) then expid = 4486
 
@@ -274,7 +288,7 @@ pro get_zp_e_per_s, raw=raw, expid=expid, outstr=outstr
       expid=expid, bitmask=bitmask
 
   exptime = sxpar(h, 'EXPTIME')
-  gain = 1.64
+  if ~keyword_set(gain) then gain = 1.71 ; from 'low dome' measurements
 
  ; get cat and im
   try_aper_phot, cat, im=im, raw=raw, expid=expid
@@ -322,7 +336,8 @@ help, aper_corr
   write_png, 'zpt_summary_' + strtrim(string(expid), 2) + '_CIC.png', bitmap
 
   outstr = {night: '', expid: 0L, exptime: 0.0, airmass: 0.0, $
-            zp_meas: 0.0, zp_pred: 0.0, raw: 0B, gain: gain}
+            zp_meas: 0.0, zp_pred: 0.0, raw: 0B, gain: gain, $
+            n_stars: n_elements(cat)}
 
   outstr.night = night_from_expid(expid)
   outstr.expid = expid
@@ -331,6 +346,10 @@ help, aper_corr
   outstr.zp_meas = zp
   outstr.zp_pred = zp_pred
   outstr.raw = keyword_set(raw)
+
+  addstr = get_central_radec(astr)
+
+  outstr = struct_addtags(outstr, addstr)
 
 ; remember to compare to value that incorporates correct airmass !!
 ; also there's the aperture mask issue, which should cause real
@@ -345,12 +364,12 @@ end
 
 ; airmass = 1.5908490000000000
 
-pro _gather_results, outstr
+pro _gather_results, outstr, gain=gain
 
   expids = [4486, 4487, 4488, 7577, 7578, 7579, 7580, 7581]
 
   for i=0L, n_elements(expids)-1 do begin
-      get_zp_e_per_s, expid=expids[i], outstr=result
+      get_zp_e_per_s, expid=expids[i], outstr=result, gain=gain
       if ~keyword_set(outstr) then outstr = result else $
           outstr = struct_append(outstr, result)
   endfor
