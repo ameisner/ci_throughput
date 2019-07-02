@@ -3,9 +3,11 @@ function night_from_expid, expid
   if n_elements(expid) NE 1 then stop
 
   if (expid NE 4486) AND (expid NE 7577) AND (expid NE 7578) AND $
-     (expid NE 7579) AND (expid NE 7580) AND (expid NE 7581) then stop
+     (expid NE 7579) AND (expid NE 7580) AND (expid NE 7581) AND $
+     (expid NE 4487) AND (expid NE 4488) then stop
 
-  if expid EQ 4486 then return, '20190406'
+  if (expid EQ 4486) OR (expid EQ 4487) OR (expid EQ 4488) then $
+      return, '20190406'
 
   return, '20190417'
 
