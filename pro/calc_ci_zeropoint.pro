@@ -1,7 +1,12 @@
-pro calc_ci_zeropoint, airmass=airmass, zp_pred=zp_pred, silent=silent
+pro calc_ci_zeropoint, airmass=airmass, zp_pred=zp_pred, silent=silent, $
+                       gfa=gfa
 
-  assemble_ci_transmission, airmass=airmass, outstr=outstr
-
+  if ~keyword_set(gfa) then begin
+      assemble_ci_transmission, airmass=airmass, outstr=outstr
+  endif else begin
+      assemble_gfa_transmission, airmass=airmass, outstr=outstr
+  endelse
+ 
   ergs_per_second_per_hertz_per_cm2 = 3.631e-20 ; mag = 0 AB
 
   detected_ergs_per_second_per_hertz_per_cm2 = $
