@@ -49,7 +49,7 @@ pro assemble_gfa_transmission, airmass=airmass, outstr=outstr, write=write
 
   filter_transmission_frac = filter_transmission_percent/100.0
 
-  readcol, '../etc/gfa_qe_broadband.csv', lambda_qe_nm, qe_percent, F='F, F'
+  readcol, '../etc/gfa_qe_midband.csv', lambda_qe_nm, qe_percent, F='F, F'
 
   qe_frac = qe_percent/100.0
   
