@@ -10,7 +10,7 @@ pro assemble_gfa_transmission, airmass=airmass, outstr=outstr, write=write
 
 ;  atmosphere*aluminum*corrector*filter*QE*VIGNETTING
 
-  vignetting_fac = 0.9325349296250408
+  vignetting_fac = 0.95910780 ; updated 2019 December 16, get_vignetting_fac.pro
   
   if ~keyword_set(airmass) then airmass = 1.0
 
@@ -100,7 +100,7 @@ pro assemble_gfa_transmission, airmass=airmass, outstr=outstr, write=write
   xyouts, 370, 0.90, charsize=1.5, 'primary mirror (reflectance)', $
           charthick=charthick
 
-  xyouts, 390, 0.95, charsize=1.7, 'vignetting', color=djs_icolor('magenta'), $
+  xyouts, 390, 0.962, charsize=1.7, 'vignetting', color=djs_icolor('magenta'), $
           charthick=charthick
   
   xyouts, 364, 0.8575 - 0.0065, 'DESI corrector', color=djs_icolor('green'), $
