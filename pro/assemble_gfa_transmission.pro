@@ -53,43 +53,59 @@ pro assemble_gfa_transmission, airmass=airmass, outstr=outstr, write=write
 
   qe_frac = qe_percent/100.0
   
-  window, xsize=950, ysize=650
+  window, xsize=1200, ysize=650
+
+    dfpsplot, 'gfa_throughput_factors.eps', /encap, $
+              /color, ysize=8, xsize=15
+    
   xtitle = 'wavelength (nm)'
   ytitle = 'throughput'
   plot, lambda_mirror_nm, primary_reflectance_frac, xrange=[350, 1055], /xst, $
         charsize=1.4, xtitle=xtitle, ytitle=ytitle, $
-        title='DESI GFA transmission factors'
+        title='DESI GFA throughput multiplicative factors', thick=2, charthick=2
   
   oplot, [-1000, 2000], vignetting_fac + [0, 0], color=djs_icolor('magenta'), $
-           linestyle=1
-  oplot, lambda_atm_nm, atm_transmission_frac, color=djs_icolor('blue')
+           linestyle=1, thick=2
+  oplot, lambda_atm_nm, atm_transmission_frac, color=djs_icolor('blue'), $
+         thick=2
   oplot, lambda_corrector_nm, corrector_transmission_frac, $
-      color=djs_icolor('green')
-  oplot, lambda_filter_nm, filter_transmission_frac, color=djs_icolor('red')
-  oplot, lambda_qe_nm, qe_frac, color=djs_icolor('yellow')
+      color=djs_icolor('green'), thick=2
+  oplot, lambda_filter_nm, filter_transmission_frac, color=djs_icolor('red'), $
+         thick=2
+  oplot, lambda_qe_nm, qe_frac, color=djs_icolor('orange'), thick=2
+
+  charthick = 3
+  xyouts, 775 + 27.5, 0.65 + 0.12, 'KPNO', charsize=2, $
+          color=djs_icolor('blue'), $
+          charthick=charthick
+  xyouts, 775 + 27.5, 0.6 + 0.12, 'atmosphere', charsize=2, $
+          color=djs_icolor('blue'), $
+          charthick=charthick
+  xyouts, 775 + 27.5, 0.55 + 0.12, 'airmass = ' + $
+          string(airmass, format='(F4.2)'), $
+          charsize=2, color=djs_icolor('blue'), charthick=charthick
+
+  xyouts, 880, 0.425, 'e2v CCD230-42 QE', charsize=2, $
+      color=djs_icolor('orange'), charthick=charthick
+
+  xyouts, 467.5+25, 0.15, 'r filter', charsize=2, $
+      color=djs_icolor('red'), charthick=charthick
+
+  xyouts, 440.0+25, 0.10, '(DESI-1297)', charsize=2, $
+      color=djs_icolor('red'), charthick=charthick
   
-  xyouts, 775, 0.65 + 0.12, 'KPNO', charsize=2, color=djs_icolor('blue')
-  xyouts, 775, 0.6 + 0.12, 'atmosphere', charsize=2, color=djs_icolor('blue')
-  xyouts, 775, 0.55 + 0.12, 'airmass = ' + string(airmass, format='(F4.2)'), $
-      charsize=2, color=djs_icolor('blue')
+  xyouts, 370, 0.90, charsize=1.5, 'primary mirror (reflectance)', $
+          charthick=charthick
 
-  xyouts, 865, 0.425, 'e2v CCD230-42 QE', charsize=2, color=djs_icolor('yellow')
-
-  xyouts, 467.5, 0.15, 'r filter', charsize=2, $
-      color=djs_icolor('red')
-
-  xyouts, 440.0, 0.10, '(DESI-1297)', charsize=2, $
-      color=djs_icolor('red')
+  xyouts, 390, 0.95, charsize=1.7, 'vignetting', color=djs_icolor('magenta'), $
+          charthick=charthick
   
-  xyouts, 370, 0.90, charsize=1.5, 'primary mirror (reflectance)'
+  xyouts, 364, 0.8575 - 0.0065, 'DESI corrector', color=djs_icolor('green'), $
+      charsize=1.4, charthick=charthick
 
-  xyouts, 390, 0.95, charsize=1.7, 'vignetting', color=djs_icolor('magenta')
-  
-  xyouts, 364, 0.8575, 'DESI corrector', color=djs_icolor('green'), $
-      charsize=1.4
-
-  bitmap = tvrd(true=1)
-  write_png, 'gfa_throughput_factors.png', bitmap
+  dfpsclose
+;  bitmap = tvrd(true=1)
+;  write_png, 'gfa_throughput_factors.png', bitmap
 
 ; all of these multiplicative throughput factors on a common
 ; wavelength grid are fraction 0->1
