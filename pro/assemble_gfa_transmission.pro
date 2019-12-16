@@ -88,6 +88,9 @@ pro assemble_gfa_transmission, airmass=airmass, outstr=outstr, write=write
   xyouts, 880, 0.425, 'e2v CCD230-42 QE', charsize=2, $
       color=djs_icolor('orange'), charthick=charthick
 
+  xyouts, 898, 0.375, '(midband coating)', charsize=2, $
+          color=djs_icolor('orange'), charthick=charthick
+  
   xyouts, 467.5+25, 0.15, 'r filter', charsize=2, $
       color=djs_icolor('red'), charthick=charthick
 
