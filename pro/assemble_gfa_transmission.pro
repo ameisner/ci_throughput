@@ -100,7 +100,8 @@ pro assemble_gfa_transmission, airmass=airmass, outstr=outstr, write=write
   xyouts, 370, 0.90, charsize=1.5, 'primary mirror (reflectance)', $
           charthick=charthick
 
-  xyouts, 390, 0.962, charsize=1.7, 'vignetting', color=djs_icolor('magenta'), $
+  xyouts, 365, 0.962, charsize=1.7, 'vignetting at GFA radius', $
+          color=djs_icolor('magenta'), $
           charthick=charthick
   
   xyouts, 364, 0.8575 - 0.0065, 'DESI corrector', color=djs_icolor('green'), $
