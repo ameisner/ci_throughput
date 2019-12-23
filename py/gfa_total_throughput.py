@@ -35,3 +35,21 @@ def plot_total_throughput(ps1=False):
         outname = outname.replace('.eps', '-with_ps1.eps')
 
     plt.savefig(outname, bbox_inches='tight')
+
+def compare_to_fiducials():
+    fname = '../etc/gfa_throughput-airmass_1.00.fits'
+    tab = fits.getdata(fname)
+
+    plt.plot(tab['LAMBDA_NM'], tab['THROUGHPUT']/np.max(tab['THROUGHPUT']), c='k', linewidth=2)
+
+    fname_f = '../etc/fiducial-spectrum-25401.fits'
+    tab = fits.getdata(fname_f)
+
+    plt.plot(tab['LAMBDA_AA']/10.0, tab['FLUX']/np.max(tab['FLUX']), c='b')
+
+    plt.xlabel('wavelength (nm)')
+    plt.ylabel('normalized wavelength dependence (peak = 1)')
+
+    plt.text(380, 0.5, 'fiducials', color='b')
+    plt.text(600, 0.5, 'GFA total\nthroughput')
+    plt.savefig('gfa_total_throughput+fiducials_spectrum.png', bbox_inches='tight')
